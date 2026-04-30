@@ -26,10 +26,16 @@ export default function OpenGraphImage() {
         <div style={{ fontSize: 34, letterSpacing: 3, opacity: 0.9 }}>
           PIZZERIA ADRIA
         </div>
-        <div style={{ fontSize: 78, fontWeight: 700, lineHeight: 1.05 }}>
-          Authentische italienische
-          <br />
-          Küche in Trier-Quint
+        <div
+          style={{
+            display: "flex",
+            fontSize: 78,
+            fontWeight: 700,
+            lineHeight: 1.05,
+            whiteSpace: "pre-line",
+          }}
+        >
+          {"Authentische italienische\nKüche in Trier-Quint"}
         </div>
         <div style={{ fontSize: 30, opacity: 0.95 }}>
           Speisekarte • Öffnungszeiten • Reservierung • Lieferung
