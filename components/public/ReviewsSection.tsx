@@ -37,13 +37,13 @@ export function ReviewsSection({
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_18%,rgba(185,28,28,0.11),transparent_32%),radial-gradient(circle_at_84%_64%,rgba(251,191,36,0.16),transparent_34%)]"
         aria-hidden
       />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-red-800">
               Gästebewertungen
             </p>
-            <h2 className="mt-4 max-w-xl font-serif text-[clamp(2.25rem,4vw+0.75rem,4.5rem)] font-medium leading-[0.98] tracking-tight">
+            <h2 className="mt-4 max-w-xl font-serif text-[clamp(2.1rem,3.6vw+0.8rem,4.1rem)] font-medium leading-[1.01] tracking-tight">
               Was unsere Gäste über uns sagen
             </h2>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-stone-600 sm:text-lg">
@@ -100,7 +100,7 @@ export function ReviewsSection({
                   <Stars />
                   <span>Google-Bewertung hinterlassen</span>
                 </div>
-                <h3 className="mt-5 max-w-2xl font-serif text-3xl font-medium tracking-tight sm:text-5xl">
+                <h3 className="mt-5 max-w-2xl font-serif text-[clamp(1.9rem,2.6vw+0.85rem,3.4rem)] font-medium tracking-tight">
                   Hat es dir geschmeckt? Sag es dem nächsten Gast.
                 </h3>
                 <p className="mt-4 max-w-2xl text-base leading-relaxed text-stone-700 sm:text-lg">

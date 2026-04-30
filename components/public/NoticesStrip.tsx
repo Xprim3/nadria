@@ -110,7 +110,7 @@ export function NoticesStrip({ notices }: { notices: NoticeRow[] }) {
         className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[42px_42px] opacity-40"
         aria-hidden
       />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden rounded-4xl border border-amber-100/20 bg-black/24 p-3 shadow-[0_24px_80px_rgba(0,0,0,0.28)] ring-1 ring-white/10 backdrop-blur-md">
           <div
             className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amber-200/18 blur-3xl"
@@ -151,10 +151,10 @@ export function NoticesStrip({ notices }: { notices: NoticeRow[] }) {
 
             <div className="relative p-6 sm:p-8 lg:p-10">
               <article>
-                <p className="inline-flex rounded-full border border-amber-100/25 bg-amber-100/10 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-amber-100">
+                <p className="inline-flex rounded-full border border-amber-100/25 bg-amber-100/10 px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-amber-100 sm:text-xs">
                   {noticeDateLine(featuredNotice)}
                 </p>
-                <h3 className="mt-4 font-serif text-[clamp(2rem,3vw+0.75rem,3.7rem)] font-medium leading-[0.98] tracking-tight text-white">
+                <h3 className="mt-4 font-serif text-[clamp(1.9rem,2.6vw+0.8rem,3.2rem)] font-medium leading-[1.01] tracking-tight text-white">
                   {renderNoticeText(featuredNotice.title)}
                 </h3>
                 {featuredNotice.body ? (
@@ -186,7 +186,7 @@ export function NoticesStrip({ notices }: { notices: NoticeRow[] }) {
                         />
                       </div>
                     ) : null}
-                      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-amber-200">
+                      <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-amber-200 sm:text-xs">
                         {noticeDateLine(notice)}
                       </p>
                       <h4 className="mt-2 font-serif text-xl font-medium leading-tight text-white">

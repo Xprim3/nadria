@@ -55,7 +55,7 @@ export function ContactSection({
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_14%_16%,rgba(217,119,6,0.1),transparent_32%),radial-gradient(circle_at_88%_80%,rgba(127,29,29,0.08),transparent_36%)]"
         aria-hidden
       />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 max-w-3xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-amber-800">
             Besuche uns

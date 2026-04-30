@@ -38,7 +38,7 @@ export function StorySection({
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_16%_14%,rgba(146,64,14,0.11),transparent_30%),linear-gradient(to_bottom,rgba(245,236,231,0.58),transparent_52%)]"
         aria-hidden
       />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
           <div className="min-w-0 lg:col-span-6">
             <AboutAmbientSlider
@@ -53,7 +53,7 @@ export function StorySection({
             </p>
             <h2
               id="about-title"
-              className="mt-4 max-w-2xl font-serif text-[clamp(2.2rem,4vw+0.9rem,4rem)] font-medium leading-[1.03] tracking-tight text-stone-950"
+              className="mt-4 max-w-2xl font-serif text-[clamp(2rem,3.5vw+0.9rem,3.6rem)] font-medium leading-[1.05] tracking-tight text-stone-950"
             >
               Ein herzlicher Ort für italienisches Essen, gemeinsame Momente und ehrliche Gastfreundschaft.
             </h2>

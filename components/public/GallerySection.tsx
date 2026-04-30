@@ -122,9 +122,9 @@ export function GallerySection({
   return (
     <section
       id="gallery"
-      className="scroll-mt-[max(0.75rem,calc(var(--site-header-h,5.25rem)+0.5rem))] overflow-hidden border-b border-amber-200/70 bg-[#fff8f3] py-16 text-stone-950 sm:py-24"
+      className="scroll-mt-[max(0.75rem,calc(var(--site-header-h,5.25rem)+0.5rem))] overflow-hidden border-b border-amber-200/70 bg-[#fff8f3] py-18 text-stone-950 sm:py-24"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="max-w-2xl font-serif text-[clamp(2rem,4vw+0.75rem,3.8rem)] font-medium leading-[1.04] tracking-tight">
