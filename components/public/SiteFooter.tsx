@@ -137,7 +137,20 @@ export function SiteFooter({
         </div>
 
         <div className="mt-12 flex flex-col gap-5 border-t border-white/10 pt-6 text-sm text-stone-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} {brandName}. Alle Rechte vorbehalten.</p>
+          <div className="space-y-1">
+            <p>© {new Date().getFullYear()} {brandName}. Alle Rechte vorbehalten.</p>
+            <p className="text-xs text-stone-500">
+              Entwickelt von{" "}
+              <a
+                href="https://www.denisjanuzi.dev/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-4 transition hover:text-stone-200 hover:underline"
+              >
+                Denis Januzi
+              </a>
+            </p>
+          </div>
           <nav
             className="flex flex-wrap gap-x-6 gap-y-2"
             aria-label="Legal"
