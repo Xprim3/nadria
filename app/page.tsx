@@ -83,7 +83,7 @@ export default async function Home() {
       addressLocality: restaurant.city || undefined,
       addressCountry: restaurant.country || "DE",
     },
-    sameAs: [restaurant.instagram_url, restaurant.facebook_url].filter(Boolean),
+    sameAs: [restaurant.social_instagram, restaurant.social_facebook].filter(Boolean),
   };
 
   return (
