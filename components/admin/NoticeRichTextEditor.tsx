@@ -1,4 +1,4 @@
-"use client";
+"use client"; // TODO: remove this once we have a proper rich text editor
 
 import Placeholder from "@tiptap/extension-placeholder";
 import TextAlign from "@tiptap/extension-text-align";
