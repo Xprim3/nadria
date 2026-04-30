@@ -28,6 +28,8 @@ export function AboutAmbientSlider({
           className="object-cover"
           sizes="(min-width: 1024px) 42vw, 90vw"
           priority
+          loading="eager"
+          fetchPriority="high"
         />
         <div
           className="pointer-events-none absolute inset-0 bg-linear-to-t from-stone-950/18 via-transparent to-amber-50/5"
