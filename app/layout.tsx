@@ -27,16 +27,40 @@ const geistMono = Geist_Mono({
 });
 
 const siteUrl = getSiteUrl();
+const defaultTitle = "Pizzeria Adria in Trier-Quint | Italienisches Restaurant";
+const defaultDescription =
+  "Pizzeria Adria in Trier-Quint: authentische italienische Küche, Pizza, Pasta und Antipasti. Jetzt Speisekarte ansehen, Tisch reservieren oder Lieferung anfragen.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Pizzeria Adria Trier-Quint",
+    default: defaultTitle,
     template: "%s | Pizzeria Adria Trier-Quint",
   },
-  description:
-    "Authentische italienische Küche in Trier-Quint: Speisekarte, Öffnungszeiten, Reservierung, Lieferung und Kontakt.",
+  description: defaultDescription,
   applicationName: "Pizzeria Adria",
+  icons: {
+    icon: "/images/brand-logo.png",
+    shortcut: "/images/brand-logo.png",
+    apple: "/images/brand-logo.png",
+  },
+  keywords: [
+    "Pizzeria Trier",
+    "Italienisches Restaurant Trier",
+    "Pizza Trier-Quint",
+    "Pasta Trier",
+    "Pizzeria Adria",
+    "Reservierung Trier Restaurant",
+    "Lieferung Trier Pizza",
+  ],
+  category: "restaurant",
+  creator: "Pizzeria Adria",
+  publisher: "Pizzeria Adria",
+  formatDetection: {
+    email: true,
+    address: true,
+    telephone: true,
+  },
   alternates: {
     canonical: "/",
   },
@@ -45,16 +69,14 @@ export const metadata: Metadata = {
     siteName: "Pizzeria Adria Trier-Quint",
     locale: "de_DE",
     url: siteUrl,
-    title: "Pizzeria Adria Trier-Quint",
-    description:
-      "Authentische italienische Küche in Trier-Quint: Speisekarte, Öffnungszeiten, Reservierung, Lieferung und Kontakt.",
+    title: defaultTitle,
+    description: defaultDescription,
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Pizzeria Adria Trier-Quint" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pizzeria Adria Trier-Quint",
-    description:
-      "Authentische italienische Küche in Trier-Quint: Speisekarte, Öffnungszeiten, Reservierung, Lieferung und Kontakt.",
+    title: defaultTitle,
+    description: defaultDescription,
     images: ["/twitter-image"],
   },
   robots: {

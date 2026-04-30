@@ -22,26 +22,35 @@ export const revalidate = 60;
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await loadPublicSeo();
   const siteUrl = getSiteUrl();
-  const name = seo?.name ?? "Restaurant";
+  const name = seo?.name ?? "Pizzeria Adria";
   const description =
-    seo?.tagline ?? "Speisekarte, Öffnungszeiten und Kontakt — lokal und frisch.";
+    seo?.tagline?.trim() ||
+    "Authentische italienische Küche in Trier-Quint mit Pizza, Pasta und Antipasti. Öffnungszeiten, Speisekarte, Reservierung und Kontakt auf einen Blick.";
+  const pageTitle = `${name} in Trier-Quint | Italienisches Restaurant`;
   return {
-    title: name,
+    title: pageTitle,
     description,
+    keywords: [
+      "Pizzeria Trier",
+      "Restaurant Trier-Quint",
+      "Italienisches Essen Trier",
+      "Pizza und Pasta Trier",
+      "Pizzeria Adria",
+    ],
     alternates: {
       canonical: "/",
     },
     openGraph: {
       type: "website",
       url: siteUrl,
-      title: name,
+      title: pageTitle,
       description,
       locale: "de_DE",
       images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: name }],
     },
     twitter: {
       card: "summary_large_image",
-      title: name,
+      title: pageTitle,
       description,
       images: ["/twitter-image"],
     },
@@ -56,9 +65,33 @@ export default async function Home() {
   }
 
   const { restaurant } = data;
+  const ldJson = {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    name: restaurant.name,
+    description: restaurant.tagline || undefined,
+    image: `${getSiteUrl()}/opengraph-image`,
+    url: getSiteUrl(),
+    telephone: restaurant.phone || undefined,
+    email: restaurant.email || undefined,
+    servesCuisine: "Italian",
+    priceRange: "$$",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: restaurant.address_line || undefined,
+      postalCode: restaurant.postal_code || undefined,
+      addressLocality: restaurant.city || undefined,
+      addressCountry: restaurant.country || "DE",
+    },
+    sameAs: [restaurant.instagram_url, restaurant.facebook_url].filter(Boolean),
+  };
 
   return (
     <div className="flex min-h-svh flex-col pb-20 sm:pb-0" id="top">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
+      />
       <SiteHeader restaurantName={restaurant.name} />
       <div className="relative">
         <HeroSection restaurant={restaurant} gallery={data.gallery} />
