@@ -9,7 +9,7 @@ export function MobileCtaBar({
   const phoneHref = telHref ?? "tel:+496519664588";
 
   return (
-    <div className="safe-area-pb pointer-events-none fixed right-0 bottom-0 left-0 z-30 p-3 pl-[max(0.75rem,env(safe-area-inset-left,0.75rem))] pr-[max(0.75rem,env(safe-area-inset-right,0.75rem))] sm:hidden">
+    <div className="safe-area-pb pointer-events-none fixed right-0 bottom-5 left-0 z-30 p-3 pl-[max(0.75rem,env(safe-area-inset-left,0.75rem))] pr-[max(0.75rem,env(safe-area-inset-right,0.75rem))] sm:hidden">
       <div className="pointer-events-auto mx-auto flex max-w-md overflow-hidden rounded-[1.35rem] border border-amber-200/30 bg-stone-950/88 shadow-[0_20px_48px_rgba(12,10,9,0.55)] ring-1 ring-amber-100/10 backdrop-blur-xl">
         <a
           href={phoneHref}
