@@ -109,7 +109,12 @@ export type PublicSitePayload = {
   mailtoHref: string | null;
 };
 
-function buildDirectionsUrl(r: RestaurantRow) {
+function buildDirectionsUrl(
+  r: Pick<
+    RestaurantRow,
+    "maps_url" | "address_line" | "postal_code" | "city" | "country"
+  >,
+) {
   if (r.maps_url) return r.maps_url;
   const parts = [r.address_line, r.postal_code, r.city, r.country].filter(
     Boolean,
