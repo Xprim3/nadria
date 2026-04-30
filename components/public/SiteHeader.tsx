@@ -9,7 +9,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
-import { splitBrandName } from "@/lib/brand-name";
+import { getHeaderBrand } from "@/lib/brand-name";
 
 const nav = [
   { href: "#top", label: "Start" },
@@ -150,10 +150,7 @@ export function SiteHeader({
 }: {
   restaurantName: string;
 }) {
-  const { lead: brandLead, sub: brandSub } = splitBrandName(
-    restaurantName,
-    "Pizzeria & Restaurant",
-  );
+  const { lead: brandLead, sub: brandSub } = getHeaderBrand();
   const [menuOpen, setMenuOpen] = useState(false);
   const [solidBar, setSolidBar] = useState(false);
   const panelId = useId();
@@ -292,8 +289,8 @@ export function SiteHeader({
               <span className="min-w-0 text-left">
                 <span
                   className={
-                    (onLight ? "text-stone-900" : "text-white") +
-                    " block max-w-prose font-serif text-[1.45rem] font-semibold leading-tight tracking-tight" +
+                    (onLight ? "text-amber-900" : "text-white") +
+                    " block max-w-prose font-serif text-[1.45rem] font-semibold leading-tight tracking-tight transition-colors duration-300" +
                     " min-[400px]:text-[1.7rem] sm:text-[1.9rem]" +
                     " md:text-[2rem] md:leading-tight" +
                     " lg:text-[1.6rem] lg:leading-none" +
@@ -308,11 +305,11 @@ export function SiteHeader({
                     (onLight
                       ? "text-amber-900/80 md:text-stone-600"
                       : "text-amber-50/90 md:text-white/85") +
-                    " mt-0.5 block max-w-prose font-sans text-xs font-medium leading-snug tracking-[0.02em]" +
-                    " min-[400px]:text-[0.8rem] sm:mt-1 sm:max-w-md sm:text-sm" +
-                    " md:mt-0.5 md:max-w-lg md:text-[0.82rem] md:leading-tight" +
-                    " lg:max-w-xl lg:text-[0.7rem] lg:tracking-[0.04em]" +
-                    " xl:text-xs 2xl:text-sm"
+                    " mt-0.5 block max-w-prose font-serif text-[0.82rem] italic font-medium leading-snug tracking-[0.01em]" +
+                    " min-[400px]:text-[0.9rem] sm:mt-1 sm:max-w-md sm:text-[0.98rem]" +
+                    " md:mt-0.5 md:max-w-lg md:text-[0.9rem] md:leading-tight" +
+                    " lg:max-w-xl lg:text-[0.78rem] lg:tracking-[0.02em]" +
+                    " xl:text-[0.9rem] 2xl:text-[0.98rem]"
                   }
                 >
                   {brandSub}
