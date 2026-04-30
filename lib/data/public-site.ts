@@ -158,28 +158,67 @@ function filterNotices(
 export async function loadPublicSiteData(): Promise<PublicSitePayload | null> {
   try {
     const supabase = await createClient();
-    const { data: restaurant, error: rError } = await supabase
+    const { data: restaurantFull, error: restaurantFullError } = await supabase
       .from("restaurant")
       .select(
         "id, name, tagline, story, phone, email, address_line, city, postal_code, country, latitude, longitude, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content, show_notices, about_image_path, about_detail_image_path",
       )
       .limit(1)
       .maybeSingle();
+    const { data: restaurantBase, error: restaurantBaseError } = restaurantFull
+      ? { data: null, error: null as null | { message: string } }
+      : await supabase
+          .from("restaurant")
+          .select(
+            "id, name, tagline, story, phone, email, address_line, city, postal_code, country, latitude, longitude, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content",
+          )
+          .limit(1)
+          .maybeSingle();
 
-    if (rError || !restaurant) return null;
+    const restaurant = restaurantFull ?? restaurantBase;
+    const restaurantError = restaurantFullError ?? restaurantBaseError;
+    if (restaurantError || !restaurant) return null;
 
     const rid = restaurant.id as string;
     const [noticesQ, hoursQ, galleryQ, catsQ, reviewsQ] = await Promise.all([
-      supabase
-        .from("notice")
-        .select("id, title, body, starts_on, ends_on, is_active, image_path")
-        .eq("restaurant_id", rid)
-        .order("created_at", { ascending: false }),
-      supabase
-        .from("opening_hours")
-        .select("day_of_week, is_closed, open_time, close_time, second_open_time, second_close_time")
-        .eq("restaurant_id", rid)
-        .order("day_of_week", { ascending: true }),
+      (async () => {
+        const full = await supabase
+          .from("notice")
+          .select("id, title, body, starts_on, ends_on, is_active, image_path")
+          .eq("restaurant_id", rid)
+          .order("created_at", { ascending: false });
+        if (!full.error) return full;
+        const base = await supabase
+          .from("notice")
+          .select("id, title, body, starts_on, ends_on, is_active")
+          .eq("restaurant_id", rid)
+          .order("created_at", { ascending: false });
+        return {
+          ...base,
+          data: (base.data ?? []).map((n) => ({ ...n, image_path: null })),
+        };
+      })(),
+      (async () => {
+        const full = await supabase
+          .from("opening_hours")
+          .select("day_of_week, is_closed, open_time, close_time, second_open_time, second_close_time")
+          .eq("restaurant_id", rid)
+          .order("day_of_week", { ascending: true });
+        if (!full.error) return full;
+        const base = await supabase
+          .from("opening_hours")
+          .select("day_of_week, is_closed, open_time, close_time")
+          .eq("restaurant_id", rid)
+          .order("day_of_week", { ascending: true });
+        return {
+          ...base,
+          data: (base.data ?? []).map((h) => ({
+            ...h,
+            second_open_time: null,
+            second_close_time: null,
+          })),
+        };
+      })(),
       supabase
         .from("gallery_image")
         .select("id, storage_path, caption, sort_order")
@@ -190,12 +229,16 @@ export async function loadPublicSiteData(): Promise<PublicSitePayload | null> {
         .select("id, name, description, sort_order")
         .eq("restaurant_id", rid)
         .order("sort_order", { ascending: true }),
-      supabase
-        .from("review")
-        .select("id, quote, name, detail, is_active, sort_order")
-        .eq("restaurant_id", rid)
-        .order("sort_order", { ascending: true })
-        .order("created_at", { ascending: false }),
+      (async () => {
+        const full = await supabase
+          .from("review")
+          .select("id, quote, name, detail, is_active, sort_order")
+          .eq("restaurant_id", rid)
+          .order("sort_order", { ascending: true })
+          .order("created_at", { ascending: false });
+        if (full.error) return { data: [], error: null };
+        return full;
+      })(),
     ]);
 
     const hours = (hoursQ.data ?? []) as HoursRow[];
@@ -274,7 +317,21 @@ export async function loadPublicSiteData(): Promise<PublicSitePayload | null> {
       (review) => review.is_active,
     );
 
-    const restaurantRow = restaurant as Omit<RestaurantRow, "aboutImageUrl" | "aboutDetailImageUrl">;
+    const restaurantRow = {
+      ...(restaurant as Omit<RestaurantRow, "aboutImageUrl" | "aboutDetailImageUrl">),
+      show_notices:
+        "show_notices" in (restaurant as Record<string, unknown>)
+          ? Boolean((restaurant as Record<string, unknown>).show_notices)
+          : true,
+      about_image_path:
+        "about_image_path" in (restaurant as Record<string, unknown>)
+          ? ((restaurant as Record<string, unknown>).about_image_path as string | null)
+          : null,
+      about_detail_image_path:
+        "about_detail_image_path" in (restaurant as Record<string, unknown>)
+          ? ((restaurant as Record<string, unknown>).about_detail_image_path as string | null)
+          : null,
+    };
 
     return {
       restaurant: {
