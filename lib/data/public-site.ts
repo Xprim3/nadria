@@ -115,11 +115,16 @@ function buildDirectionsUrl(
     "maps_url" | "address_line" | "postal_code" | "city" | "country"
   >,
 ) {
-  if (r.maps_url) return r.maps_url;
-  const parts = [r.address_line, r.postal_code, r.city, r.country].filter(
-    Boolean,
-  ) as string[];
-  if (parts.length === 0) return null;
+  const explicitMapUrl = r.maps_url?.trim();
+  if (explicitMapUrl) return explicitMapUrl;
+
+  const usefulParts = [r.address_line, r.postal_code, r.city]
+    .map((part) => part?.trim())
+    .filter(Boolean) as string[];
+  // Avoid low-quality directions like "query=Deutschland" only.
+  if (usefulParts.length === 0) return null;
+
+  const parts = [...usefulParts, r.country?.trim()].filter(Boolean) as string[];
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(parts.join(", "))}`;
 }
 

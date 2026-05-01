@@ -60,12 +60,24 @@ export function GallerySection({
       !item.storagePath.startsWith("hero/"),
   );
   const sliderDisplayItems = sliderItems;
-  const staticDisplayItems = [1, 2, 3, 4].map(
-    (slot, index) =>
-      staticItems.find((item) => item.sortOrder === slot) ??
-      staticItems[index] ??
-      null,
-  );
+  const staticDisplayItems = (() => {
+    const usedIds = new Set<string>();
+    return [1, 2, 3, 4].map((slot) => {
+      const exactSlot = staticItems.find(
+        (item) => item.sortOrder === slot && !usedIds.has(item.id),
+      );
+      if (exactSlot) {
+        usedIds.add(exactSlot.id);
+        return exactSlot;
+      }
+      const nextUnused = staticItems.find((item) => !usedIds.has(item.id));
+      if (nextUnused) {
+        usedIds.add(nextUnused.id);
+        return nextUnused;
+      }
+      return null;
+    });
+  })();
   const totalCount = sliderDisplayItems.length;
   const [featuredIndex, setFeaturedIndex] = useState(0);
   const autoResumeAtRef = useRef(0);
@@ -172,13 +184,6 @@ export function GallerySection({
                   {index === 0 ? (
                     g ? (
                     <>
-                      <Image
-                        src={g.imageUrl}
-                        alt={g.caption}
-                        fill
-                        className="object-cover transition duration-700 ease-out sm:hidden"
-                        sizes="82vw"
-                      />
                       {sliderDisplayItems.map((item, itemIndex) => (
                         <Image
                           key={item.id}
@@ -186,12 +191,12 @@ export function GallerySection({
                           alt={item.caption}
                           fill
                           className={
-                            "hidden object-cover transition-[opacity,transform] duration-700 ease-out sm:block " +
+                            "object-cover transition-[opacity,transform] duration-700 ease-out " +
                             (itemIndex === normalizedFeaturedIndex
                               ? "opacity-100"
                               : "opacity-0")
                           }
-                          sizes="(min-width: 640px) 50vw, 100vw"
+                          sizes="(min-width: 640px) 50vw, 82vw"
                         />
                       ))}
                     </>
