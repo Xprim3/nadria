@@ -32,13 +32,16 @@ export default async function AdminGalleryPage() {
       <AdminPageHeader
         eyebrow="Media"
         title="Gallery"
-        description="Control the four static gallery boxes separately from the main sliding image collection."
+        description="Clear upload structure: Hero images, 4 static boxes, and gallery slider images."
       />
 
       <AdminPanel
-        title="Hero slider images"
-        description="Upload only your best wide photos here. These images appear behind the logo at the top of the homepage."
+        title="1) Hero slider images"
+        description="Top homepage background behind the logo. Use only your best wide photos."
       >
+        <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-stone-500 uppercase">
+          Upload
+        </p>
         <form action={createGalleryImage} className="grid gap-4 md:grid-cols-[1fr_1fr_120px_auto] md:items-end">
           <input type="hidden" name="gallery_area" value="hero" />
           <Field label="Hero images">
@@ -59,9 +62,15 @@ export default async function AdminGalleryPage() {
           </Field>
           <SubmitButton>Upload</SubmitButton>
         </form>
-      </AdminPanel>
-
-      <AdminPanel title="Current hero images">
+        <div className="mt-7 border-t border-stone-200/80 pt-5">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <p className="text-xs font-semibold tracking-[0.14em] text-stone-500 uppercase">
+              Current images
+            </p>
+            <span className="rounded-full bg-stone-100 px-2.5 py-1 text-xs font-medium text-stone-600">
+              {heroImages.length}
+            </span>
+          </div>
         {heroImages.length === 0 ? (
           <EmptyState
             title="No hero images yet"
@@ -74,12 +83,16 @@ export default async function AdminGalleryPage() {
             ))}
           </div>
         )}
+        </div>
       </AdminPanel>
 
       <AdminPanel
-        title="Four static boxes"
-        description="Upload one image for each small fixed box beside the main slider."
+        title="2) Static gallery boxes (4)"
+        description="These are the four smaller fixed boxes next to the big gallery slider."
       >
+        <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-stone-500 uppercase">
+          One image per box
+        </p>
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {[1, 2, 3, 4].map((slot) => {
             const image = staticImages.find((item) => item.sort_order === slot);
@@ -127,9 +140,12 @@ export default async function AdminGalleryPage() {
       </AdminPanel>
 
       <AdminPanel
-        title="Slider images"
-        description="Upload the images that rotate in the large gallery slider. You can add 10, 22, or however many you need."
+        title="3) Gallery slider images"
+        description="Main rotating gallery images in the homepage gallery section."
       >
+        <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-stone-500 uppercase">
+          Upload
+        </p>
         <form action={createGalleryImage} className="grid gap-4 md:grid-cols-[1fr_1fr_120px_auto] md:items-end">
           <input type="hidden" name="gallery_area" value="slider" />
           <Field label="Slider images">
@@ -150,9 +166,15 @@ export default async function AdminGalleryPage() {
           </Field>
           <SubmitButton>Upload</SubmitButton>
         </form>
-      </AdminPanel>
-
-      <AdminPanel title="Current slider images">
+        <div className="mt-7 border-t border-stone-200/80 pt-5">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <p className="text-xs font-semibold tracking-[0.14em] text-stone-500 uppercase">
+              Current images
+            </p>
+            <span className="rounded-full bg-stone-100 px-2.5 py-1 text-xs font-medium text-stone-600">
+              {sliderImages.length}
+            </span>
+          </div>
         {sliderImages.length === 0 ? (
           <EmptyState
             title="No slider images yet"
@@ -165,6 +187,7 @@ export default async function AdminGalleryPage() {
             ))}
           </div>
         )}
+        </div>
       </AdminPanel>
     </div>
   );
@@ -176,7 +199,7 @@ function GalleryImageForm({ image }: { image: AdminGalleryImage }) {
   return (
     <form
       action={updateGalleryImage}
-      className="overflow-hidden rounded-2xl border border-stone-200 bg-stone-50"
+      className="overflow-hidden rounded-2xl border border-stone-200 bg-stone-50/80"
     >
       <input type="hidden" name="id" value={image.id} />
       <input
@@ -197,6 +220,13 @@ function GalleryImageForm({ image }: { image: AdminGalleryImage }) {
         ) : null}
       </div>
       <div className="space-y-4 p-4">
+        <p className="text-xs text-stone-500">
+          {image.storage_path.startsWith("hero/")
+            ? "Hero"
+            : image.storage_path.startsWith("static/")
+              ? "Static box"
+              : "Slider"}
+        </p>
         <Field label="Caption">
           <input
             className={inputClass}
