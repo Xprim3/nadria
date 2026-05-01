@@ -279,7 +279,7 @@ export function SiteHeader({
             : "bg-transparent text-white backdrop-blur-none"
         }`}
       >
-        <div className="mx-auto max-w-7xl box-border px-4 py-3 sm:px-6 sm:py-3.5 lg:max-h-[84px] lg:overflow-hidden lg:px-8 lg:py-3 xl:py-3.5">
+        <div className="mx-auto max-w-7xl box-border px-6 pt-4 pb-3 sm:px-6 sm:py-3.5 lg:max-h-[84px] lg:overflow-hidden lg:px-8 lg:py-3 xl:py-3.5">
           <div className="box-border flex min-h-0 items-center justify-between gap-3 lg:h-full lg:gap-4">
             <a
               href="#top"
