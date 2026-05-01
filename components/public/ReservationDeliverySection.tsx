@@ -2,6 +2,7 @@ import type { ComponentType, SVGProps } from "react";
 
 const lieferandoUrl =
   "https://www.lieferando.de/en/menu/ristorante-pizzeria-adria-trier";
+const skanomUrl = "https://skanom.com/adriatrier";
 const fallbackTelHref = "tel:+496519664588";
 const fallbackMailtoHref = "mailto:info@pizzeriaadria.de";
 
@@ -229,8 +230,16 @@ export function ReservationDeliverySection({
 
               <div className="mt-7 rounded-3xl border border-amber-200/80 bg-white p-5 text-stone-950 shadow-xl shadow-red-950/10">
                 <p className="font-serif text-2xl font-medium">Online bestellen</p>
+                <a
+                  href={skanomUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-red-800 px-5 py-3 text-base font-semibold text-white shadow-[0_14px_32px_rgba(127,29,29,0.24)] transition hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-800"
+                >
+                  Bei Skanom bestellen
+                </a>
                 <p className="mt-3 text-sm leading-relaxed text-red-950/75">
-                  Für eine bequeme Online-Bestellung kannst du auch unseren Partner{" "}
+                  Für eine bequeme Online-Bestellung nutze am besten Skanom. Als Alternative kannst du auch über{" "}
                   <a
                     href={lieferandoUrl}
                     target="_blank"

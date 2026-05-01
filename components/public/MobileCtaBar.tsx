@@ -1,11 +1,11 @@
 export function MobileCtaBar({
   telHref,
-  directionsUrl,
+  directionsUrl: _directionsUrl,
 }: {
   telHref: string | null;
   directionsUrl: string | null;
 }) {
-  const locationHref = directionsUrl ?? "https://maps.app.goo.gl/omxtAs8qfxaDdPD18";
+  const deliveryHref = "https://skanom.com/adriatrier";
   const phoneHref = telHref ?? "tel:+496519664588";
 
   return (
@@ -22,16 +22,16 @@ export function MobileCtaBar({
         </a>
         <span className="my-3 w-px bg-amber-200/25" aria-hidden />
         <a
-          href={locationHref}
+          href={deliveryHref}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="external noopener noreferrer"
           className="flex min-h-14 min-w-0 flex-1 touch-manipulation items-center justify-center gap-2.5 bg-linear-to-br from-amber-200 via-amber-300 to-amber-400 px-4.5 font-serif text-base font-semibold tracking-[0.01em] text-stone-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.34)] transition hover:brightness-105 active:brightness-95"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-4.5 w-4.5" aria-hidden>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h11v8H3V7Zm11 2h3.2l2.8 3.2V15h-6V9Z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
           </svg>
-          Navigation
+          Lieferung
         </a>
       </div>
     </div>

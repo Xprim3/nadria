@@ -2,6 +2,8 @@ import Image from "next/image";
 import type { PublicSitePayload } from "@/lib/data/public-site";
 import { getMenuPdfUrl } from "@/lib/supabase/public-urls";
 
+const skanomDeliveryUrl = "https://skanom.com/adriatrier";
+
 function IconDining(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} aria-hidden {...props}>
@@ -29,17 +31,19 @@ const menuCards = [
       "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&q=80",
     items: ["Holzofenpizza", "Hausgemachte Pasta", "Antipasti", "Desserts"],
     Icon: IconDining,
+    deliveryStyle: false,
   },
   {
     title: "Liefer-Menü",
     eyebrow: "Abholung & Lieferung",
     description:
       "Eine praktische Auswahl für Abholung und Lieferung, frisch aus unserer Küche zubereitet.",
-    href: getMenuPdfUrl("delivery"),
+    href: skanomDeliveryUrl,
     image:
       "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=1200&q=80",
     items: ["Pizza", "Pasta-Boxen", "Salate", "Familienfavoriten"],
     Icon: IconDelivery,
+    deliveryStyle: true,
   },
 ] as const;
 
@@ -94,10 +98,18 @@ export function MenuSection({
           {menuCards.map((menu) => (
             <article
               key={menu.href}
-              className="group relative overflow-hidden rounded-4xl border border-white/12 bg-white/8 p-3 shadow-[0_28px_90px_rgba(0,0,0,0.28)] ring-1 ring-white/10 backdrop-blur-md sm:p-4"
+              className={
+                "group relative overflow-hidden rounded-4xl p-3 shadow-[0_28px_90px_rgba(0,0,0,0.28)] ring-1 backdrop-blur-md sm:p-4 " +
+                (menu.deliveryStyle
+                  ? "border-amber-200/45 bg-amber-100/14 ring-amber-100/20"
+                  : "border-white/12 bg-white/8 ring-white/10")
+              }
             >
               <div
-                className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-amber-200/18 blur-3xl transition duration-700 group-hover:scale-125"
+                className={
+                  "pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full blur-3xl transition duration-700 group-hover:scale-125 " +
+                  (menu.deliveryStyle ? "bg-red-500/20" : "bg-amber-200/18")
+                }
                 aria-hidden
               />
               <div className="relative grid overflow-hidden rounded-[1.75rem] border border-white/10 bg-stone-950/45 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] sm:items-stretch">
@@ -116,7 +128,14 @@ export function MenuSection({
                 </div>
 
                 <div className="flex min-w-0 flex-col p-5 sm:p-6 lg:p-7">
-                  <p className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.24em] text-amber-200 uppercase">
+                  <p
+                    className={
+                      "inline-flex w-fit items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold tracking-[0.16em] uppercase " +
+                      (menu.deliveryStyle
+                        ? "border border-amber-200/45 bg-amber-100/12 text-amber-100"
+                        : "text-amber-200")
+                    }
+                  >
                     <menu.Icon className="h-4 w-4" />
                     <span>{menu.eyebrow}</span>
                   </p>
@@ -140,7 +159,12 @@ export function MenuSection({
                     href={menu.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-8 inline-flex w-fit items-center justify-center gap-2 rounded-full border border-amber-200/55 bg-amber-100 px-5 py-3 text-sm font-semibold text-red-950 shadow-[0_14px_35px_rgba(0,0,0,0.2)] transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-100"
+                    className={
+                      "mt-8 inline-flex w-fit items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold shadow-[0_14px_35px_rgba(0,0,0,0.2)] transition focus-visible:outline-2 focus-visible:outline-offset-2 " +
+                      (menu.deliveryStyle
+                        ? "border border-red-300/45 bg-linear-to-r from-red-700 to-red-800 text-white hover:from-red-600 hover:to-red-700 focus-visible:outline-red-200"
+                        : "border border-amber-200/55 bg-amber-100 text-red-950 hover:bg-white focus-visible:outline-amber-100")
+                    }
                   >
                     <span>Menü öffnen</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-4 w-4" aria-hidden>
