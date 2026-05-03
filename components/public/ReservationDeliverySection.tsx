@@ -230,44 +230,50 @@ export function ReservationDeliverySection({
               </div>
 
               <div className="mt-7 rounded-3xl border border-amber-200/80 bg-white p-5 text-stone-950 shadow-xl shadow-red-950/10">
-                <p className="font-serif text-2xl font-medium">Online bestellen</p>
-                <a
-                  href={skanomUrl}
-                  target="_blank"
-                  rel="external noopener noreferrer"
-                  className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-red-800 px-5 py-3 text-base font-semibold text-white shadow-[0_14px_32px_rgba(127,29,29,0.24)] transition hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-800"
-                >
-                  Bei Skanom bestellen
-                </a>
-                <p className="mt-3 text-sm leading-relaxed text-red-950/75">
-                  Für eine bequeme Online-Bestellung nutze am besten Skanom. Als Alternative kannst du auch über{" "}
-                  <a
-                    href={lieferandoUrl}
-                    target="_blank"
-                    rel="external noopener noreferrer"
-                    className="font-semibold text-red-900 underline underline-offset-4 transition hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-red-900"
-                  >
-                    Lieferando
-                  </a>
-                  .
-                </p>
-
-                <div className="mt-6 border-t border-amber-200/70 pt-6">
+                <div>
                   <p className="font-serif text-xl font-medium text-stone-950">
                     Speisekarte scannen
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-red-950/75">
-                    Scan den QR-Code mit der Kamera deines Smartphones und öffne die Speisekarte direkt als PDF.
+                    Öffne die Kamera und scanne den Code — die Speisekarte öffnet sich auf dem Handy.
                   </p>
-                  <div className="mx-auto mt-4 flex max-w-46 justify-center rounded-2xl bg-white p-3 ring-1 ring-stone-200/90 shadow-inner shadow-stone-200/40">
+                  <div className="mx-auto mt-4 flex max-w-46 justify-center rounded-2xl bg-stone-50 p-3 ring-1 ring-stone-200/90 shadow-inner shadow-stone-200/40">
                     <Image
                       src="/images/menu-qr.png"
-                      alt="QR-Code zur Speisekarte (PDF)"
+                      alt="QR-Code zur Speisekarte"
                       width={176}
                       height={176}
                       className="h-auto w-full"
                       unoptimized
                     />
+                  </div>
+                </div>
+
+                <div className="mt-6 border-t border-amber-200/70 pt-6">
+                  <p className="font-serif text-xl font-medium text-stone-950">
+                    Online bestellen
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-red-950/75">
+                    Zum Bestellen öffnest du Skanom mit dem Button. Lieferando bleibt eine zusätzliche Option.
+                  </p>
+                  <a
+                    href={skanomUrl}
+                    target="_blank"
+                    rel="external noopener noreferrer"
+                    className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-red-800 px-5 py-3 text-base font-semibold text-white shadow-[0_14px_32px_rgba(127,29,29,0.24)] transition hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-800"
+                  >
+                    Bei Skanom bestellen
+                  </a>
+                  <div className="mt-4 rounded-2xl border border-stone-200/90 bg-stone-50 px-4 py-3 text-center text-sm text-red-950/80">
+                    <span className="font-medium text-stone-700">Alternativ: </span>
+                    <a
+                      href={lieferandoUrl}
+                      target="_blank"
+                      rel="external noopener noreferrer"
+                      className="font-semibold text-red-900 underline underline-offset-4 transition hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-red-900"
+                    >
+                      Lieferando
+                    </a>
                   </div>
                 </div>
               </div>
