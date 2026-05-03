@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ComponentType, SVGProps } from "react";
 
 const lieferandoUrl =
@@ -108,7 +109,7 @@ export function ReservationDeliverySection({
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+        <div className="grid items-start gap-6 lg:grid-cols-2 lg:gap-8">
           <article className="relative overflow-hidden rounded-4xl border border-white/80 bg-white/90 p-6 shadow-[0_24px_80px_rgba(68,64,60,0.11)] ring-1 ring-stone-900/3 backdrop-blur-sm sm:p-8 lg:p-10">
             <div
               className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-amber-200/40 blur-3xl"
@@ -233,7 +234,7 @@ export function ReservationDeliverySection({
                 <a
                   href={skanomUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="external noopener noreferrer"
                   className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-red-800 px-5 py-3 text-base font-semibold text-white shadow-[0_14px_32px_rgba(127,29,29,0.24)] transition hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-800"
                 >
                   Bei Skanom bestellen
@@ -243,13 +244,32 @@ export function ReservationDeliverySection({
                   <a
                     href={lieferandoUrl}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="external noopener noreferrer"
                     className="font-semibold text-red-900 underline underline-offset-4 transition hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-red-900"
                   >
                     Lieferando
                   </a>
                   .
                 </p>
+
+                <div className="mt-6 border-t border-amber-200/70 pt-6">
+                  <p className="font-serif text-xl font-medium text-stone-950">
+                    Speisekarte scannen
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-red-950/75">
+                    Scan den QR-Code mit der Kamera deines Smartphones und öffne die Speisekarte direkt als PDF.
+                  </p>
+                  <div className="mx-auto mt-4 flex max-w-46 justify-center rounded-2xl bg-white p-3 ring-1 ring-stone-200/90 shadow-inner shadow-stone-200/40">
+                    <Image
+                      src="/images/menu-qr.png"
+                      alt="QR-Code zur Speisekarte (PDF)"
+                      width={176}
+                      height={176}
+                      className="h-auto w-full"
+                      unoptimized
+                    />
+                  </div>
+                </div>
               </div>
 
             </div>
