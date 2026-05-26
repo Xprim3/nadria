@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/AppImage";
 import { BRAND_LOGO_SRC } from "@/lib/brand-logo";
 
 /**

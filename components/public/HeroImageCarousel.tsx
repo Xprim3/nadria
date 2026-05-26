@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/AppImage";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 const AUTO_MS = 7000;

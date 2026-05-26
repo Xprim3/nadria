@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/AppImage";
 import { formatPriceCents } from "@/lib/format";
 import type { PublicSitePayload } from "@/lib/data/public-site";
 

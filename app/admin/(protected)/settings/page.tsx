@@ -1,5 +1,5 @@
 import { updateRestaurantSettings } from "@/app/admin/actions";
-import Image from "next/image";
+import Image from "@/components/AppImage";
 import {
   AdminPageHeader,
   AdminPanel,

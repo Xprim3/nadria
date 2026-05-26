@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/AppImage";
 import type { PublicSitePayload } from "@/lib/data/public-site";
 import { getMenuPdfUrl } from "@/lib/supabase/public-urls";
 
