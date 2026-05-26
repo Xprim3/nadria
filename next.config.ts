@@ -37,6 +37,9 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Serve images directly so remote Supabase assets do not depend on
+    // Vercel's image optimization quota in production.
+    unoptimized: true,
     remotePatterns: [
       ...(supabaseHost
         ? [
