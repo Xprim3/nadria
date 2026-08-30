@@ -1,7 +1,7 @@
 import Image from "@/components/AppImage";
 import type { PublicSitePayload } from "@/lib/data/public-site";
-import { getMenuPdfUrl } from "@/lib/supabase/public-urls";
 
+const digMenuUrl = "https://www.digmenu.app/adria";
 const skanomDeliveryUrl = "https://skanom.com/adriatrier";
 
 function IconDining(props: React.SVGProps<SVGSVGElement>) {
@@ -26,7 +26,7 @@ const menuCards = [
     eyebrow: "Restaurant",
     description:
       "Italienische Klassiker, Hauspizzen, Pasta, Antipasti und Desserts direkt am Tisch serviert.",
-    href: getMenuPdfUrl("dineIn"),
+    href: digMenuUrl,
     image:
       "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&q=80",
     items: ["Holzofenpizza", "Hausgemachte Pasta", "Antipasti", "Desserts"],
@@ -178,7 +178,7 @@ export function MenuSection({
         </div>
 
         <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-relaxed text-stone-300">
-          Die Menüs öffnen als PDF-Dateien, damit du sie auf dem Handy oder Desktop klar lesen kannst.
+          Das Restaurant-Menü öffnet digital bei DigMenu. Das Liefer-Menü führt dich zu Skanom für Abholung und Bestellung.
         </p>
       </div>
     </section>
