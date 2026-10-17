@@ -23,6 +23,10 @@ export type Restaurant = {
   about_detail_image_path: string | null;
   aboutImageUrl: string | null;
   aboutDetailImageUrl: string | null;
+  promo_modal_enabled: boolean;
+  promo_modal_image_path: string | null;
+  promo_modal_link_url: string | null;
+  promoModalImageUrl: string | null;
 };
 
 export type Category = {
@@ -110,35 +114,49 @@ export async function getRestaurant() {
   const { data, error } = await supabase
     .from("restaurant")
     .select(
-      "id, name, tagline, story, phone, email, address_line, city, postal_code, country, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content, show_notices, about_image_path, about_detail_image_path",
+      "id, name, tagline, story, phone, email, address_line, city, postal_code, country, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content, show_notices, about_image_path, about_detail_image_path, promo_modal_enabled, promo_modal_image_path, promo_modal_link_url",
     )
     .limit(1)
     .maybeSingle();
 
   if (error) throw new Error(error.message);
   if (data) {
-    const restaurant = data as Omit<Restaurant, "aboutImageUrl" | "aboutDetailImageUrl">;
-    return {
-      ...restaurant,
-      aboutImageUrl: getGalleryImageUrl(restaurant.about_image_path),
-      aboutDetailImageUrl: getGalleryImageUrl(restaurant.about_detail_image_path),
-    };
+    return withRestaurantUrls(data);
   }
 
   const { data: created, error: createError } = await supabase
     .from("restaurant")
     .insert({ name: "Restaurant", country: "Germany" })
     .select(
-      "id, name, tagline, story, phone, email, address_line, city, postal_code, country, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content, show_notices, about_image_path, about_detail_image_path",
+      "id, name, tagline, story, phone, email, address_line, city, postal_code, country, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content, show_notices, about_image_path, about_detail_image_path, promo_modal_enabled, promo_modal_image_path, promo_modal_link_url",
     )
     .single();
 
   if (createError) throw new Error(createError.message);
-  const restaurant = created as Omit<Restaurant, "aboutImageUrl" | "aboutDetailImageUrl">;
+  return withRestaurantUrls(created);
+}
+
+function withRestaurantUrls(data: Record<string, unknown>): Restaurant {
+  const restaurant = {
+    ...data,
+    show_notices: Boolean(data.show_notices ?? true),
+    about_image_path: (data.about_image_path as string | null) ?? null,
+    about_detail_image_path:
+      (data.about_detail_image_path as string | null) ?? null,
+    promo_modal_enabled: Boolean(data.promo_modal_enabled ?? false),
+    promo_modal_image_path:
+      (data.promo_modal_image_path as string | null) ?? null,
+    promo_modal_link_url: (data.promo_modal_link_url as string | null) ?? null,
+  } as Omit<
+    Restaurant,
+    "aboutImageUrl" | "aboutDetailImageUrl" | "promoModalImageUrl"
+  >;
+
   return {
     ...restaurant,
     aboutImageUrl: getGalleryImageUrl(restaurant.about_image_path),
     aboutDetailImageUrl: getGalleryImageUrl(restaurant.about_detail_image_path),
+    promoModalImageUrl: getGalleryImageUrl(restaurant.promo_modal_image_path),
   };
 }
 

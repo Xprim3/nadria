@@ -13,6 +13,7 @@ const ADMIN_PATHS = [
   "/admin/notices",
   "/admin/reviews",
   "/admin/gallery",
+  "/admin/promo",
   "/admin/settings",
 ];
 
@@ -548,6 +549,44 @@ export async function updateRestaurantSettings(formData: FormData) {
     await supabase.storage
       .from("gallery")
       .remove([restaurant.about_detail_image_path]);
+  }
+  revalidateAdmin();
+}
+
+export async function updatePromoModal(formData: FormData) {
+  const { supabase } = await getAdminClient();
+  const restaurant = await getRestaurant();
+  const uploadedImagePath = await uploadImage(
+    "gallery",
+    formData.get("promo_image"),
+    "promo",
+  );
+  const removeImage = selected(formData, "remove_promo_image");
+  const nextImagePath = removeImage
+    ? null
+    : (uploadedImagePath ?? restaurant.promo_modal_image_path);
+  const enabled = selected(formData, "promo_modal_enabled");
+
+  if (enabled && !nextImagePath) {
+    throw new Error("Upload a poster before enabling the promo modal.");
+  }
+
+  const { error } = await supabase
+    .from("restaurant")
+    .update({
+      promo_modal_enabled: enabled,
+      promo_modal_image_path: nextImagePath,
+      promo_modal_link_url: nullableText(formData, "promo_modal_link_url"),
+    })
+    .eq("id", restaurant.id);
+  if (error) throw new Error(error.message);
+
+  const pathToRemove =
+    (uploadedImagePath || removeImage) && restaurant.promo_modal_image_path
+      ? restaurant.promo_modal_image_path
+      : null;
+  if (pathToRemove) {
+    await supabase.storage.from("gallery").remove([pathToRemove]);
   }
   revalidateAdmin();
 }

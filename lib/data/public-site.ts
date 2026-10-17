@@ -29,6 +29,10 @@ export type RestaurantRow = {
   about_detail_image_path: string | null;
   aboutImageUrl: string | null;
   aboutDetailImageUrl: string | null;
+  promo_modal_enabled: boolean;
+  promo_modal_image_path: string | null;
+  promo_modal_link_url: string | null;
+  promoModalImageUrl: string | null;
 };
 
 export type MenuCategoryRow = {
@@ -166,22 +170,34 @@ export async function loadPublicSiteData(): Promise<PublicSitePayload | null> {
     const { data: restaurantFull, error: restaurantFullError } = await supabase
       .from("restaurant")
       .select(
-        "id, name, tagline, story, phone, email, address_line, city, postal_code, country, latitude, longitude, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content, show_notices, about_image_path, about_detail_image_path",
+        "id, name, tagline, story, phone, email, address_line, city, postal_code, country, latitude, longitude, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content, show_notices, about_image_path, about_detail_image_path, promo_modal_enabled, promo_modal_image_path, promo_modal_link_url",
       )
       .limit(1)
       .maybeSingle();
-    const { data: restaurantBase, error: restaurantBaseError } = restaurantFull
-      ? { data: null, error: null as null | { message: string } }
-      : await supabase
-          .from("restaurant")
-          .select(
-            "id, name, tagline, story, phone, email, address_line, city, postal_code, country, latitude, longitude, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content",
-          )
-          .limit(1)
-          .maybeSingle();
+    const { data: restaurantWithAbout, error: restaurantWithAboutError } =
+      restaurantFull
+        ? { data: null, error: null as null | { message: string } }
+        : await supabase
+            .from("restaurant")
+            .select(
+              "id, name, tagline, story, phone, email, address_line, city, postal_code, country, latitude, longitude, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content, show_notices, about_image_path, about_detail_image_path",
+            )
+            .limit(1)
+            .maybeSingle();
+    const { data: restaurantBase, error: restaurantBaseError } =
+      restaurantFull || restaurantWithAbout
+        ? { data: null, error: null as null | { message: string } }
+        : await supabase
+            .from("restaurant")
+            .select(
+              "id, name, tagline, story, phone, email, address_line, city, postal_code, country, latitude, longitude, maps_url, social_instagram, social_facebook, impressum_content, datenschutz_content",
+            )
+            .limit(1)
+            .maybeSingle();
 
-    const restaurant = restaurantFull ?? restaurantBase;
-    const restaurantError = restaurantFullError ?? restaurantBaseError;
+    const restaurant = restaurantFull ?? restaurantWithAbout ?? restaurantBase;
+    const restaurantError =
+      restaurantFullError ?? restaurantWithAboutError ?? restaurantBaseError;
     if (restaurantError || !restaurant) return null;
 
     const rid = restaurant.id as string;
@@ -322,19 +338,38 @@ export async function loadPublicSiteData(): Promise<PublicSitePayload | null> {
       (review) => review.is_active,
     );
 
+    const raw = restaurant as Record<string, unknown>;
     const restaurantRow = {
-      ...(restaurant as Omit<RestaurantRow, "aboutImageUrl" | "aboutDetailImageUrl">),
+      ...(restaurant as Omit<
+        RestaurantRow,
+        | "aboutImageUrl"
+        | "aboutDetailImageUrl"
+        | "promoModalImageUrl"
+        | "promo_modal_enabled"
+        | "promo_modal_image_path"
+        | "promo_modal_link_url"
+      >),
       show_notices:
-        "show_notices" in (restaurant as Record<string, unknown>)
-          ? Boolean((restaurant as Record<string, unknown>).show_notices)
-          : true,
+        "show_notices" in raw ? Boolean(raw.show_notices) : true,
       about_image_path:
-        "about_image_path" in (restaurant as Record<string, unknown>)
-          ? ((restaurant as Record<string, unknown>).about_image_path as string | null)
+        "about_image_path" in raw
+          ? (raw.about_image_path as string | null)
           : null,
       about_detail_image_path:
-        "about_detail_image_path" in (restaurant as Record<string, unknown>)
-          ? ((restaurant as Record<string, unknown>).about_detail_image_path as string | null)
+        "about_detail_image_path" in raw
+          ? (raw.about_detail_image_path as string | null)
+          : null,
+      promo_modal_enabled:
+        "promo_modal_enabled" in raw
+          ? Boolean(raw.promo_modal_enabled)
+          : false,
+      promo_modal_image_path:
+        "promo_modal_image_path" in raw
+          ? (raw.promo_modal_image_path as string | null)
+          : null,
+      promo_modal_link_url:
+        "promo_modal_link_url" in raw
+          ? (raw.promo_modal_link_url as string | null)
           : null,
     };
 
@@ -342,7 +377,12 @@ export async function loadPublicSiteData(): Promise<PublicSitePayload | null> {
       restaurant: {
         ...restaurantRow,
         aboutImageUrl: getGalleryImageUrl(restaurantRow.about_image_path),
-        aboutDetailImageUrl: getGalleryImageUrl(restaurantRow.about_detail_image_path),
+        aboutDetailImageUrl: getGalleryImageUrl(
+          restaurantRow.about_detail_image_path,
+        ),
+        promoModalImageUrl: getGalleryImageUrl(
+          restaurantRow.promo_modal_image_path,
+        ),
       },
       openStatus,
       notices,

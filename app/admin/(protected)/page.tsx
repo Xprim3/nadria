@@ -87,6 +87,11 @@ export default async function AdminDashboardPage() {
               description="Add and manage client feedback"
             />
             <QuickLink
+              href="/admin/promo"
+              title="Promo modal"
+              description="Homepage poster popup"
+            />
+            <QuickLink
               href="/admin/settings"
               title="Reservation & delivery"
               description="Phone, email, address, map, socials"

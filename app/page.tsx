@@ -6,6 +6,7 @@ import { HeroSection } from "@/components/public/HeroSection";
 import { MenuSection } from "@/components/public/MenuSection";
 import { MobileCtaBar } from "@/components/public/MobileCtaBar";
 import { NoticesStrip } from "@/components/public/NoticesStrip";
+import { PromoModal } from "@/components/public/PromoModal";
 import { PublicSetupFallback } from "@/components/public/PublicSetupFallback";
 import { ReservationDeliverySection } from "@/components/public/ReservationDeliverySection";
 import { ReviewsSection } from "@/components/public/ReviewsSection";
@@ -121,6 +122,12 @@ export default async function Home() {
       />
       <MobileCtaBar telHref={data.telHref} directionsUrl={data.directionsUrl} />
       <BackToTopButton />
+      <PromoModal
+        enabled={restaurant.promo_modal_enabled}
+        imageUrl={restaurant.promoModalImageUrl}
+        imagePath={restaurant.promo_modal_image_path}
+        linkUrl={restaurant.promo_modal_link_url}
+      />
     </div>
   );
 }

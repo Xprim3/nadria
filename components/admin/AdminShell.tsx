@@ -12,6 +12,7 @@ import {
   IconGallery,
   IconMenu,
   IconNotice,
+  IconPromo,
   IconReview,
   IconSettings,
 } from "@/components/admin/icons";
@@ -27,6 +28,7 @@ const nav: {
   { href: "/admin/notices", label: "Notices", Icon: IconNotice },
   { href: "/admin/reviews", label: "Reviews", Icon: IconReview },
   { href: "/admin/gallery", label: "Gallery", Icon: IconGallery },
+  { href: "/admin/promo", label: "Promo", Icon: IconPromo },
   { href: "/admin/settings", label: "Settings", Icon: IconSettings },
 ];
 

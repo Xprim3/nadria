@@ -130,3 +130,20 @@ export function IconChevronRight(p: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function IconPromo(p: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...stroke(p)} aria-hidden>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3.75 4.5h16.5A.75.75 0 0 1 21 5.25v13.5a.75.75 0 0 1-.75.75H3.75a.75.75 0 0 1-.75-.75V5.25a.75.75 0 0 1 .75-.75Z"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8.25 9.75h7.5M8.25 13.5h4.5"
+      />
+    </svg>
+  );
+}
