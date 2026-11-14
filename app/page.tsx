@@ -122,12 +122,7 @@ export default async function Home() {
       />
       <MobileCtaBar telHref={data.telHref} directionsUrl={data.directionsUrl} />
       <BackToTopButton />
-      <PromoModal
-        enabled={restaurant.promo_modal_enabled}
-        imageUrl={restaurant.promoModalImageUrl}
-        imagePath={restaurant.promo_modal_image_path}
-        linkUrl={restaurant.promo_modal_link_url}
-      />
+      <PromoModal posters={data.promoPosters} />
     </div>
   );
 }

@@ -72,6 +72,17 @@ function imagePath(bucket: "menu" | "gallery", file: File, folder?: string) {
   return `${folder ?? bucket}/${crypto.randomUUID()}.${ext}`;
 }
 
+const MAX_POSTER_BYTES = 10 * 1024 * 1024;
+
+function assertPosterImage(file: File) {
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Poster must be an image.");
+  }
+  if (file.size > MAX_POSTER_BYTES) {
+    throw new Error("Poster must be 10 MB or smaller.");
+  }
+}
+
 async function uploadImage(
   bucket: "menu" | "gallery",
   file: FormDataEntryValue | null,
@@ -553,40 +564,78 @@ export async function updateRestaurantSettings(formData: FormData) {
   revalidateAdmin();
 }
 
-export async function updatePromoModal(formData: FormData) {
+export async function createPromoPoster(formData: FormData) {
   const { supabase } = await getAdminClient();
   const restaurant = await getRestaurant();
-  const uploadedImagePath = await uploadImage(
-    "gallery",
-    formData.get("promo_image"),
-    "promo",
-  );
-  const removeImage = selected(formData, "remove_promo_image");
-  const nextImagePath = removeImage
-    ? null
-    : (uploadedImagePath ?? restaurant.promo_modal_image_path);
-  const enabled = selected(formData, "promo_modal_enabled");
-
-  if (enabled && !nextImagePath) {
-    throw new Error("Upload a poster before enabling the promo modal.");
+  const file = formData.get("promo_image");
+  if (!(file instanceof File) || file.size === 0) {
+    throw new Error("Poster image is required.");
   }
+  assertPosterImage(file);
+
+  const storagePath = await uploadImage("gallery", file, "promo");
+  if (!storagePath) throw new Error("Poster image is required.");
+
+  const { error } = await supabase.from("promo_poster").insert({
+    restaurant_id: restaurant.id,
+    storage_path: storagePath,
+    link_url: nullableText(formData, "link_url"),
+    is_active: selected(formData, "is_active"),
+  });
+  if (error) {
+    await supabase.storage.from("gallery").remove([storagePath]);
+    throw new Error(error.message);
+  }
+  revalidateAdmin();
+}
+
+export async function updatePromoPoster(formData: FormData) {
+  const { supabase } = await getAdminClient();
+  const restaurant = await getRestaurant();
+  const id = text(formData, "id");
+  if (!id) throw new Error("Poster id is required.");
 
   const { error } = await supabase
-    .from("restaurant")
+    .from("promo_poster")
     .update({
-      promo_modal_enabled: enabled,
-      promo_modal_image_path: nextImagePath,
-      promo_modal_link_url: nullableText(formData, "promo_modal_link_url"),
+      link_url: nullableText(formData, "link_url"),
+      is_active: selected(formData, "is_active"),
     })
-    .eq("id", restaurant.id);
+    .eq("id", id)
+    .eq("restaurant_id", restaurant.id);
+  if (error) throw new Error(error.message);
+  revalidateAdmin();
+}
+
+export async function deletePromoPoster(formData: FormData) {
+  const { supabase } = await getAdminClient();
+  const restaurant = await getRestaurant();
+  const id = text(formData, "id");
+  if (!id) throw new Error("Poster id is required.");
+
+  const { data, error: readError } = await supabase
+    .from("promo_poster")
+    .select("id, storage_path")
+    .eq("id", id)
+    .eq("restaurant_id", restaurant.id)
+    .maybeSingle();
+  if (readError) throw new Error(readError.message);
+  if (!data) throw new Error("Poster not found.");
+
+  const { error } = await supabase
+    .from("promo_poster")
+    .delete()
+    .eq("id", id)
+    .eq("restaurant_id", restaurant.id);
   if (error) throw new Error(error.message);
 
-  const pathToRemove =
-    (uploadedImagePath || removeImage) && restaurant.promo_modal_image_path
-      ? restaurant.promo_modal_image_path
-      : null;
-  if (pathToRemove) {
-    await supabase.storage.from("gallery").remove([pathToRemove]);
+  const { count, error: countError } = await supabase
+    .from("promo_poster")
+    .select("id", { count: "exact", head: true })
+    .eq("storage_path", data.storage_path);
+  if (countError) throw new Error(countError.message);
+  if (!count && data.storage_path) {
+    await supabase.storage.from("gallery").remove([data.storage_path]);
   }
   revalidateAdmin();
 }

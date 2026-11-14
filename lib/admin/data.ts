@@ -246,6 +246,31 @@ export async function getGalleryImages() {
   }));
 }
 
+export type PromoPoster = {
+  id: string;
+  restaurant_id: string;
+  storage_path: string;
+  link_url: string | null;
+  is_active: boolean;
+  imageUrl: string | null;
+};
+
+export async function getPromoPosters() {
+  const restaurant = await getRestaurant();
+  const { supabase } = await getAdminClient();
+  const { data, error } = await supabase
+    .from("promo_poster")
+    .select("id, restaurant_id, storage_path, link_url, is_active")
+    .eq("restaurant_id", restaurant.id)
+    .order("created_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return ((data ?? []) as Omit<PromoPoster, "imageUrl">[]).map((poster) => ({
+    ...poster,
+    imageUrl: getGalleryImageUrl(poster.storage_path),
+  }));
+}
+
 export async function getReviews() {
   const restaurant = await getRestaurant();
   const { supabase } = await getAdminClient();

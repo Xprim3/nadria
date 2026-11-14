@@ -3,6 +3,7 @@ import {
   getOpenStatus,
   type OpenStatusResult,
 } from "@/lib/open-status";
+import type { PublicPromoPoster } from "@/lib/promo";
 import { createClient } from "@/lib/supabase/server";
 import { getGalleryImageUrl, getMenuImageUrl } from "@/lib/supabase/public-urls";
 
@@ -108,6 +109,7 @@ export type PublicSitePayload = {
   })[];
   gallery: (GalleryImageRow & { imageUrl: string | null })[];
   reviews: ReviewRow[];
+  promoPosters: PublicPromoPoster[];
   directionsUrl: string | null;
   telHref: string | null;
   mailtoHref: string | null;
@@ -164,6 +166,47 @@ function filterNotices(
   return rows.filter((n) => n.is_active);
 }
 
+function mapActivePromoPosters(
+  result: {
+    data:
+      | { id: string; storage_path: string; link_url: string | null }[]
+      | null;
+    error: { message: string } | null;
+  },
+  legacy: {
+    enabled: boolean;
+    imagePath: string | null;
+    linkUrl: string | null;
+  },
+): PublicPromoPoster[] {
+  if (result.error) {
+    if (!legacy.enabled || !legacy.imagePath) return [];
+    const imageUrl = getGalleryImageUrl(legacy.imagePath);
+    if (!imageUrl) return [];
+    return [
+      {
+        id: legacy.imagePath,
+        storagePath: legacy.imagePath,
+        imageUrl,
+        linkUrl: legacy.linkUrl,
+      },
+    ];
+  }
+
+  const posters: PublicPromoPoster[] = [];
+  for (const row of result.data ?? []) {
+    const imageUrl = getGalleryImageUrl(row.storage_path);
+    if (!imageUrl) continue;
+    posters.push({
+      id: row.id,
+      storagePath: row.storage_path,
+      imageUrl,
+      linkUrl: row.link_url,
+    });
+  }
+  return posters;
+}
+
 export async function loadPublicSiteData(): Promise<PublicSitePayload | null> {
   try {
     const supabase = await createClient();
@@ -201,7 +244,8 @@ export async function loadPublicSiteData(): Promise<PublicSitePayload | null> {
     if (restaurantError || !restaurant) return null;
 
     const rid = restaurant.id as string;
-    const [noticesQ, hoursQ, galleryQ, catsQ, reviewsQ] = await Promise.all([
+    const [noticesQ, hoursQ, galleryQ, catsQ, reviewsQ, postersQ] =
+      await Promise.all([
       (async () => {
         const full = await supabase
           .from("notice")
@@ -260,6 +304,12 @@ export async function loadPublicSiteData(): Promise<PublicSitePayload | null> {
         if (full.error) return { data: [], error: null };
         return full;
       })(),
+      supabase
+        .from("promo_poster")
+        .select("id, storage_path, link_url, is_active, created_at")
+        .eq("restaurant_id", rid)
+        .eq("is_active", true)
+        .order("created_at", { ascending: false }),
     ]);
 
     const hours = (hoursQ.data ?? []) as HoursRow[];
@@ -393,6 +443,11 @@ export async function loadPublicSiteData(): Promise<PublicSitePayload | null> {
       featuredItems,
       gallery,
       reviews,
+      promoPosters: mapActivePromoPosters(postersQ, {
+        enabled: restaurantRow.promo_modal_enabled,
+        imagePath: restaurantRow.promo_modal_image_path,
+        linkUrl: restaurantRow.promo_modal_link_url,
+      }),
       directionsUrl: buildDirectionsUrl(restaurantRow),
       telHref: telHref(restaurantRow.phone),
       mailtoHref: mailtoHref(restaurantRow.email),
