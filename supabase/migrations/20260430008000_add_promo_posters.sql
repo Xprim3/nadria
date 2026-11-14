@@ -15,17 +15,29 @@ create table if not exists public.promo_poster (
 create index if not exists promo_poster_restaurant_created_idx
   on public.promo_poster (restaurant_id, created_at desc);
 
+drop trigger if exists promo_poster_updated on public.promo_poster;
 create trigger promo_poster_updated
 before update on public.promo_poster
 for each row execute function public.set_updated_at();
 
 alter table public.promo_poster enable row level security;
 
-create policy "Public read promo_poster"
+-- Replaces the earlier combined read policy if this file is applied again.
+drop policy if exists "Public read promo_poster" on public.promo_poster;
+
+drop policy if exists "Anon read active promo_poster" on public.promo_poster;
+create policy "Anon read active promo_poster"
   on public.promo_poster for select
-  to anon, authenticated
+  to anon
+  using (is_active);
+
+drop policy if exists "Authenticated read promo_poster" on public.promo_poster;
+create policy "Authenticated read promo_poster"
+  on public.promo_poster for select
+  to authenticated
   using (true);
 
+drop policy if exists "Admin all promo_poster" on public.promo_poster;
 create policy "Admin all promo_poster"
   on public.promo_poster for all
   to authenticated
