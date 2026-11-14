@@ -1,8 +1,5 @@
-import {
-  createPromoPoster,
-  deletePromoPoster,
-  updatePromoPoster,
-} from "@/app/admin/actions";
+import { deletePromoPoster, updatePromoPoster } from "@/app/admin/actions";
+import { AddPromoPosterForm } from "./AddPromoPosterForm";
 import Image from "@/components/AppImage";
 import {
   AdminPageHeader,
@@ -29,38 +26,10 @@ export default async function AdminPromoPage() {
       />
 
       <AdminPanel
-        title="Add poster"
-        description="Saving adds this poster. It does not replace or deactivate the others."
+        title="Add posters"
+        description="Saving adds one poster per image, with the same link and active setting. It does not replace or deactivate the others."
       >
-        <form action={createPromoPoster} className="space-y-4">
-          <Field
-            label="Upload poster"
-            hint="Images only, up to 10 MB. Vertical or square photos work best."
-          >
-            <input
-              className={inputClass}
-              name="promo_image"
-              type="file"
-              accept="image/*"
-              required
-            />
-          </Field>
-          <Field label="Optional link" hint="If set, tapping this poster opens the URL in a new tab.">
-            <input
-              className={inputClass}
-              name="link_url"
-              type="url"
-              placeholder="https://…"
-            />
-          </Field>
-          <div className="flex flex-wrap items-center gap-4">
-            <label className="flex items-center gap-2 text-sm text-zinc-700">
-              <input name="is_active" type="checkbox" defaultChecked />
-              Active
-            </label>
-            <SubmitButton>Add poster</SubmitButton>
-          </div>
-        </form>
+        <AddPromoPosterForm />
       </AdminPanel>
 
       <AdminPanel

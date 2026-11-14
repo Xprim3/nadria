@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getAdminClient, getRestaurant } from "@/lib/admin/data";
+import { parsePromoStoragePaths } from "@/lib/promo-poster-upload";
 import { getMenuPdfPath } from "@/lib/supabase/public-urls";
 
 const ADMIN_PATHS = [
@@ -70,17 +71,6 @@ function imagePath(bucket: "menu" | "gallery", file: File, folder?: string) {
   const rawExt = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const ext = rawExt.replace(/[^a-z0-9]/g, "") || "jpg";
   return `${folder ?? bucket}/${crypto.randomUUID()}.${ext}`;
-}
-
-const MAX_POSTER_BYTES = 10 * 1024 * 1024;
-
-function assertPosterImage(file: File) {
-  if (!file.type.startsWith("image/")) {
-    throw new Error("Poster must be an image.");
-  }
-  if (file.size > MAX_POSTER_BYTES) {
-    throw new Error("Poster must be 10 MB or smaller.");
-  }
 }
 
 async function uploadImage(
@@ -564,29 +554,39 @@ export async function updateRestaurantSettings(formData: FormData) {
   revalidateAdmin();
 }
 
-export async function createPromoPoster(formData: FormData) {
+export async function createPromoPoster(input: {
+  storagePaths: string[];
+  linkUrl: string | null;
+  isActive: boolean;
+}) {
   const { supabase } = await getAdminClient();
   const restaurant = await getRestaurant();
-  const file = formData.get("promo_image");
-  if (!(file instanceof File) || file.size === 0) {
-    throw new Error("Poster image is required.");
-  }
-  assertPosterImage(file);
+  const parsed = parsePromoStoragePaths(input?.storagePaths);
+  if (!parsed.ok) return parsed;
 
-  const storagePath = await uploadImage("gallery", file, "promo");
-  if (!storagePath) throw new Error("Poster image is required.");
+  const linkUrl =
+    typeof input.linkUrl === "string" && input.linkUrl.trim()
+      ? input.linkUrl.trim()
+      : null;
 
-  const { error } = await supabase.from("promo_poster").insert({
-    restaurant_id: restaurant.id,
-    storage_path: storagePath,
-    link_url: nullableText(formData, "link_url"),
-    is_active: selected(formData, "is_active"),
-  });
+  const { error } = await supabase.from("promo_poster").insert(
+    parsed.paths.map((storage_path) => ({
+      restaurant_id: restaurant.id,
+      storage_path,
+      link_url: linkUrl,
+      is_active: input.isActive === true,
+    })),
+  );
   if (error) {
-    await supabase.storage.from("gallery").remove([storagePath]);
-    throw new Error(error.message);
+    try {
+      await supabase.storage.from("gallery").remove(parsed.paths);
+    } catch {
+      // The browser also deletes these objects. Keep the insert error.
+    }
+    return { ok: false as const, error: error.message };
   }
   revalidateAdmin();
+  return { ok: true as const };
 }
 
 export async function updatePromoPoster(formData: FormData) {
