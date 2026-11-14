@@ -34,3 +34,14 @@ body {
 .safe-area-pb {
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
 }
+
+/* Promo carousel arrows: desktop with a fine pointer only. */
+.promo-poster-arrow {
+  display: none;
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .promo-poster-arrow {
+    display: inline-flex;
+  }
+}
